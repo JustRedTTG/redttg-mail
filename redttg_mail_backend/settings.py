@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'redttg_mail_backend.auth_app',
+    'redttg_mail_backend.mail',
 ]
 
 MIDDLEWARE = [
