@@ -9,12 +9,6 @@ from django.utils import timezone
 from django.apps import apps
 
 
-def generate_random_code():
-    characters = string.ascii_letters + string.digits  # Uppercase letters + lowercase letters + digits
-    code = ''.join(random.choice(characters) for _ in range(7))
-    return code
-
-
 class AccountManager(auth_models.BaseUserManager):
     def _create_user(self, name, password, **extra_fields):
         user = self.model(name=name, **extra_fields)
