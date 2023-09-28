@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from tempfile import gettempdir
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -108,3 +109,4 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 AUTH_USER_MODEL = 'auth_app.AccountModel'
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(gettempdir(), 'files/'))
