@@ -15,7 +15,7 @@ def mail(request: HttpRequest):
     mail = Mail(data=d)
 
     attachments = []
-    for file in request.FILES:
+    for file in request.FILES.values():
         md5_hash = calculate_md5(file)
 
         attachment = Attachment.objects.filter(md5_hash=md5_hash).first()
