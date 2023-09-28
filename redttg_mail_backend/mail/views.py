@@ -11,16 +11,17 @@ from .models import Mail, Attachment
 def mail(request: HttpRequest):
     d = dict(request.POST)
 
+    mail = Mail(data=d)
+
     for file in request.FILES:
         md5_hash = calculate_md5(file)
 
-        # Check if a file with the same hash exists in the database
-        existing_attachment = Attachment.objects.filter(md5_hash=md5_hash).first()
+        attachment = Attachment.objects.filter(md5_hash=md5_hash).first()
 
-        if not existing_attachment:
+        if not attachment:
             # Create a new Attachment record
-            new_attachment = Attachment(file=file, md5_hash=md5_hash)
-            new_attachment.save()
+            attachment = Attachment(file=file, md5_hash=md5_hash)
+            attachment.save()
 
 
 
