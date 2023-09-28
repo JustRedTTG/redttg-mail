@@ -1,0 +1,15 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "test db",
+            "database": "postgres",
+            "username": "postgres",
+            "password": "postgres"
+        }
+    ],
+    "python.analysis.typeCheckingMode": "basic"
+}
