@@ -25,8 +25,8 @@ RUN chmod +x /app/entrypoint.sh
 RUN chmod +x /app/run.sh
 RUN chmod +x /app/wait-for-it.sh
 
-ENV DJANGO_SETTINGS_MODULE=ucha_hack_api.settings
+ENV DJANGO_SETTINGS_MODULE=redttg_mail_backend.settings
 ENV DEBUG=0
 
-ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
