@@ -17,8 +17,7 @@ RUN pip install --upgrade pip
 RUN pip install -r /tmp/requirements.txt
 
 # consistent folders for data
-RUN mkdir /app/covers
-RUN mkdir /tmp/videos
+RUN mkdir /tmp/files
 
 # enable the entry file for execution
 RUN chmod +x /app/entrypoint.sh
