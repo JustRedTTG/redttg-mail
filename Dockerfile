@@ -5,7 +5,6 @@ WORKDIR '/app'
 COPY requirements.txt /tmp/requirements.txt
 
 COPY redttg_mail_backend ./redttg_mail_backend
-COPY scrape ./scrape
 COPY manage.py .
 COPY entrypoint.sh .
 COPY run.sh .
