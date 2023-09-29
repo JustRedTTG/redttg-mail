@@ -5,8 +5,6 @@ WORKDIR '/app'
 COPY requirements.txt /tmp/requirements.txt
 
 COPY redttg_mail_backend ./redttg_mail_backend
-COPY scrape ./scrape
-COPY templates ./templates
 COPY manage.py .
 COPY entrypoint.sh .
 COPY run.sh .
@@ -19,15 +17,14 @@ RUN pip install --upgrade pip
 RUN pip install -r /tmp/requirements.txt
 
 # consistent folders for data
-RUN mkdir /app/covers
-RUN mkdir /tmp/videos
+RUN mkdir /tmp/files
 
 # enable the entry file for execution
 RUN chmod +x /app/entrypoint.sh
 RUN chmod +x /app/run.sh
 RUN chmod +x /app/wait-for-it.sh
 
-ENV DJANGO_SETTINGS_MODULE=ucha_hack_api.settings
+ENV DJANGO_SETTINGS_MODULE=redttg_mail_backend.settings
 ENV DEBUG=0
 
 ENTRYPOINT ["/app/entrypoint.sh"]
