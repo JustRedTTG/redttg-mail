@@ -28,5 +28,5 @@ RUN chmod +x /app/wait-for-it.sh
 ENV DJANGO_SETTINGS_MODULE=ucha_hack_api.settings
 ENV DEBUG=0
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/app/entrypoint.sh"]
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
