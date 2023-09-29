@@ -31,7 +31,7 @@ def mail(request: HttpRequest):
     mail.save()
 
     for info, attachment in zip(attachment_info.values(), attachments):
-        mail.attachments.create(file=attachment, filename=info['filename'], name=info['name']).save()
+        mail.attachments.create(file=attachment, filename=info['filename'], name=info['name']).save() # type: ignore
 
 
     Mail.objects.create(data=d).save()
