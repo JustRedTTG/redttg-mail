@@ -11,7 +11,7 @@ COPY run.sh .
 COPY wait-for-it.sh .
 
 RUN apk update && \
-    apk add postgresql-dev gcc python3-dev musl-dev gcc linux-headers
+    apk add postgresql-dev gcc python3-dev musl-dev gcc linux-headers bash
 
 RUN pip install --upgrade pip
 RUN pip install -r /tmp/requirements.txt
