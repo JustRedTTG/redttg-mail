@@ -1,13 +1,13 @@
 #
-name: Create and publish a deployment backend Docker image
+name: Create and publish a development frontend Docker image
 
 on:
   push:
-    branches: [ main ]
+    branches-ignore: [ main ]
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}-backend
+  IMAGE_NAME: ${{ github.repository }}-frontend
 
 jobs:
   build-and-push-image:
@@ -18,6 +18,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      - name: Setup bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
 
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -31,12 +35,18 @@ jobs:
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: latest
+          tags: dev
+
+      - name: Build react project to temp directory
+        run: |
+          cd redttg_mail_frontend
+          chmod +x build_project
+          ./build_project
 
       - name: Build and push Docker image
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: .
+          context: /tmp/build-app
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
