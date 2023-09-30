@@ -11,7 +11,7 @@ UserModel = get_user_model()
 
 @csrf_exempt
 @require_POST
-def mail(request: HttpRequest):
+def receive_mail(request: HttpRequest):
     d = dict(request.POST)
 
     envelope = json.loads(Mail.escape_data(d, 'envelope', '{}'))
@@ -27,7 +27,7 @@ def mail(request: HttpRequest):
         user = UserModel.objects.filter(name=recipient_name).first()
         if not user:
             return HttpResponse(status=400)
-        mail = user.mails.create(data=d) # type: ignore
+        mail = user.mails.create(data=d)  # type: ignore
 
         attachments = []
         for file in request.FILES.values():
@@ -41,13 +41,14 @@ def mail(request: HttpRequest):
                 attachment.save()
             attachments.append(attachment)
 
-        attachment_info = json.loads(mail.escape_data(d, 'attachment-info', '{}'))
-        
+        attachment_info = json.loads(
+            mail.escape_data(d, 'attachment-info', '{}'))
+
         mail.save()
 
         for info, attachment in zip(attachment_info.values(), attachments):
-            mail.attachments.create(file=attachment, filename=info['filename'], name=info['name']).save() # type: ignore
-
+            mail.attachments.create(
+                file=attachment, filename=info['filename'], name=info['name']).save()  # type: ignore
 
         Mail.objects.create(data=d).save()
 

@@ -17,6 +17,11 @@ class Mail(models.Model):
     to_recipients = models.CharField(max_length=255, blank=True)
     envelope = models.CharField(max_length=255, blank=True)
     user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='mails', null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    star = models.BooleanField(default=False)
+    read = models.BooleanField(default=False)
+    deleted = models.BooleanField(default=False)
+    box = models.ForeignKey('Box', on_delete=models.CASCADE, related_name='mails', null=True)
 
     def __init__(self, data, **kwargs) -> None:
         super().__init__(
@@ -38,6 +43,10 @@ class Mail(models.Model):
         if not encased:
             return default
         return list(encased)[0]
+
+
+class Box(models.Model):
+    tag = models.CharField(max_length=255, unique=True)
 
     
 class File(models.Model):

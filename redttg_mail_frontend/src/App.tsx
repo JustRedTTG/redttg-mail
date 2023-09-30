@@ -1,17 +1,20 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
+import Login from './pages/Login';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import { Container } from 'react-bootstrap';
 
 function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Home />} />
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} /> */}
-    </Routes>
-  );
+	return (
+		<Container className="vh-100">
+			<Routes>
+				<Route path="/" element={<Home />} />
+				<Route path="/login" element={<Login />} />
+				{/* <Route path="/register" element={<Register />} /> */}
+			</Routes>
+		</Container>
+	);
 }
 
 export default App;
