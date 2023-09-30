@@ -21,7 +21,6 @@ class Mail(models.Model):
     star = models.BooleanField(default=False)
     read = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
-    box = models.ForeignKey('Box', on_delete=models.CASCADE, related_name='mails', null=True)
 
     def __init__(self, data, **kwargs) -> None:
         super().__init__(
@@ -45,8 +44,9 @@ class Mail(models.Model):
         return list(encased)[0]
 
 
-class Box(models.Model):
-    tag = models.CharField(max_length=255, unique=True)
+# Scrapped
+# class Box(models.Model):
+#     tag = models.CharField(max_length=255, unique=True)
 
     
 class File(models.Model):
