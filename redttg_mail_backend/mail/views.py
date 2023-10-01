@@ -73,6 +73,6 @@ class MailView(APIView):
                 serializer = MailSerializer(mail)
                 return Response(serializer.data)
             else:
-                return Response(status=404)
+                return Response(status=403)
         except Mail.DoesNotExist:
             return Response(status=404)
