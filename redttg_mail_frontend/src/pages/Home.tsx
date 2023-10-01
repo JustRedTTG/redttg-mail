@@ -31,6 +31,11 @@ function Home() {
                                                 {mail.subject}
                                             </Card.Title>
                                         </Col>
+                                        <Col>
+                                        {mail.attachments.map((attachment) => (
+                                            <Badge pill bg="primary">{attachment.filename}</Badge>
+                                        ))}
+                                        </Col>
                                     </Row>
                                 </div>
                             </Col>
