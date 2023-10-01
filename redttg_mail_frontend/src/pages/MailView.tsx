@@ -24,7 +24,7 @@ function MailView() {
 
     useEffect(() => {
         getMail(mailId).then(setMail).catch((err) => navigate('/login'));
-    }, [mailId])
+    }, [mailId, navigate])
 
 
     return (

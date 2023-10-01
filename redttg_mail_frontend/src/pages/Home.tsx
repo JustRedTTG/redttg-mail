@@ -11,13 +11,13 @@ function Home() {
 
     useEffect(() => {
         getMails().then(setMails).catch((err) => navigate('/login'));
-    }, []);
+    }, [navigate]);
 
     return (
         <Container>
             {mails.map((mail) => (
                 <LinkContainer to={`/mail/${mail.id}`}>
-                    <a className="text-decoration-none">
+                    <a className="text-decoration-none" href={`/mail/${mail.id}`}>
                     <Card role="button" className="my-3 p-1 btn btn-danger">
                         <Row>
                             <Col xs="auto">
