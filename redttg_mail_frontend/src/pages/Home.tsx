@@ -10,7 +10,7 @@ function Home() {
     const [mails, setMails] = useState<MailPreview[]>([]);
 
     useEffect(() => {
-        getMails().then(setMails).catch((err) => navigate('/login'));
+        getMails().then(setMails).catch((err) => navigate('/login', { replace: true }));
     }, [navigate]);
 
     return (

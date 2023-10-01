@@ -23,7 +23,7 @@ function MailView() {
     });
 
     useEffect(() => {
-        getMail(mailId).then(setMail).catch((err) => navigate('/login'));
+        getMail(mailId).then(setMail).catch((err) => navigate('/login', { replace: true }));
     }, [mailId, navigate])
 
 
