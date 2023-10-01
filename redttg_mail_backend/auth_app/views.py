@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate
@@ -29,7 +30,7 @@ def login_api(request):
     user = authenticate(username=username, password=password)
 
     if user is None:
-        return HttpResponse(status=401)
+        return redirect('/login', status=401)
     else:
         login(request, user)
-        return HttpResponse(status=200)
+        return redirect('/')
