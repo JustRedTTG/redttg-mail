@@ -23,8 +23,8 @@ class Mail(models.Model):
     deleted = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs) -> None:
-        if len(args) == 1:
-            data = args[0]
+        if 'data' in kwargs.keys():
+            data = kwargs.pop('data')
         else:
             return super().__init__(*args, **kwargs)
         super().__init__(
