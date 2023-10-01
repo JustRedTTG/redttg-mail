@@ -54,8 +54,6 @@ def receive_mail(request: HttpRequest):
             mail.attachments.create(
                 file=attachment, filename=info['filename'], name=info['name']).save()  # type: ignore
 
-        Mail.objects.create(data=d).save()
-
     return HttpResponse(status=200)
 
 class MailListView(ListAPIView):
