@@ -30,7 +30,7 @@ def login_api(request):
     user = authenticate(username=username, password=password)
 
     if user is None:
-        return redirect('/login', status=401)
+        return redirect('/login')
     else:
         login(request, user)
         return redirect('/')
