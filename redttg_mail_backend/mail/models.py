@@ -16,13 +16,17 @@ class Mail(models.Model):
     from_sender = models.CharField(max_length=255, blank=True)
     to_recipients = models.CharField(max_length=255, blank=True)
     envelope = models.CharField(max_length=255, blank=True)
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='mails', null=True)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='mails')
     created = models.DateTimeField(auto_now_add=True)
     star = models.BooleanField(default=False)
     read = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
 
-    def __init__(self, data, **kwargs) -> None:
+    def __init__(self, *args, **kwargs) -> None:
+        if len(args) == 1:
+            data = args[0]
+        else:
+            return super().__init__(*args, **kwargs)
         super().__init__(
             text=self.escape_data(data, 'text'),
             html=self.escape_data(data, 'html'),

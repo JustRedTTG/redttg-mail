@@ -11,12 +11,12 @@ function Login() {
                     <Form action="/api/auth/login/" method="POST">
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
-                            <Form.Control type="email" placeholder="Enter email" />
+                            <Form.Control type="email" placeholder="mail@redttg.com" name="username" />
                         </Form.Group>
 
                         <Form.Group className="mb-3" controlId="formBasicPassword">
                             <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" />
+                            <Form.Control type="password" placeholder="Password" name="password"/>
                         </Form.Group>
                         <div className="d-flex justify-content-end">
                         <Button variant="primary" type="submit">

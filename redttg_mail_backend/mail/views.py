@@ -5,6 +5,10 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from .file_functions import calculate_md5
 from .models import Mail, Attachment, File
+from .serializers import PreviewMailSerializer, MailSerializer
+from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 UserModel = get_user_model()
 
@@ -53,3 +57,22 @@ def receive_mail(request: HttpRequest):
         Mail.objects.create(data=d).save()
 
     return HttpResponse(status=200)
+
+class MailListView(ListAPIView):
+    serializer_class = PreviewMailSerializer
+    queryset = Mail.objects.all().order_by('-created')
+
+class MailView(APIView):
+    def get(self, request, pk):
+        try:
+            # Retrieve the Mail object with the given primary key
+            mail = Mail.objects.get(pk=pk)
+
+            # Check if the Mail object belongs to the logged-in user
+            if mail.user == request.user:
+                serializer = MailSerializer(mail)
+                return Response(serializer.data)
+            else:
+                return Response(status=404)
+        except Mail.DoesNotExist:
+            return Response(status=404)
