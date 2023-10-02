@@ -1,4 +1,5 @@
 import { Button, Card, Container, Form } from "react-bootstrap";
+import { API } from "../config";
 
 function Login() {
     return (
@@ -8,7 +9,7 @@ function Login() {
                     <Card.Title>Login</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    <Form action="/api/auth/login/" method="POST">
+                    <Form action={`${API}/auth/login/`} method="POST">
                         <Form.Group className="mb-3" controlId="formBasicEmail">
                             <Form.Label>Email address</Form.Label>
                             <Form.Control type="email" placeholder="mail@redttg.com" name="username" />
