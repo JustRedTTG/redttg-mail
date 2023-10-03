@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from .file_functions import calculate_md5
 from .models import Mail, Attachment, File
 from .serializers import PreviewMailSerializer, MailSerializer
+from .validation import validate_email
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -25,9 +26,8 @@ def receive_mail(request: HttpRequest):
         return HttpResponse(status=400)
 
     for recipient in to:
-        if not recipient.endswith('@redttg.com'):
+        if not (recepient_name := validate_email(to)):
             return HttpResponse(status=400)
-        recipient_name = recipient.split('@')[0]
         user = UserModel.objects.filter(name=recipient_name).first()
         if not user:
             return HttpResponse(status=400)
