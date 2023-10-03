@@ -26,7 +26,7 @@ def receive_mail(request: HttpRequest):
         return HttpResponse(status=400)
 
     for recipient in to:
-        if not (recepient_name := validate_email(to)):
+        if not (recipient_name := validate_email(to)):
             return HttpResponse(status=400)
         user = UserModel.objects.filter(name=recipient_name).first()
         if not user:
