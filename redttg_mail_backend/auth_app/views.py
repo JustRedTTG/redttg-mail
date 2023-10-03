@@ -3,12 +3,27 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate
-
+from ..mail.models import File, UserFile
 
 @csrf_exempt
 def auth(request):
     if request.user.pk is not None:
-        response = HttpResponse(status=200, content='YES')
+        uri = request.headers.get('X-Original-URI')
+        if not uri:
+            return HttpResponse(status=200, content='YES')
+
+        attachment = uri.lstrip('/files/')
+        print(attachment)
+        response = HttpResponse(status=401, content='NO')
+        file = File.objects.get(file=attachment)
+        if file is not None:
+            userfile = UserFile.objects.filter(file=file, user=request.user)
+            print(userfile)
+            response = HttpResponse(status=200, content='YES')
+
+        
+            
+        
     else:
         response = HttpResponse(status=401, content='NO')
 

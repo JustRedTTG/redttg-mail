@@ -52,6 +52,10 @@ class Mail(models.Model):
 # class Box(models.Model):
 #     tag = models.CharField(max_length=255, unique=True)
 
+
+class UserFile(models.Model):
+    file = models.ForeignKey('File', on_delete=models.CASCADE)
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE, related_name='files')
     
 class File(models.Model):
     file = models.FileField(upload_to='attachments_files/')

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from .file_functions import calculate_md5
-from .models import Mail, Attachment, File
+from .models import Mail, File, UserFile
 from .serializers import PreviewMailSerializer, MailSerializer
 from .validation import validate_email
 from rest_framework.generics import ListAPIView
@@ -37,13 +37,13 @@ def receive_mail(request: HttpRequest):
         for file in request.FILES.values():
             md5_hash = calculate_md5(file)
 
-            attachment = File.objects.filter(md5_hash=md5_hash).first()
+            file_object = File.objects.filter(md5_hash=md5_hash).first()
 
-            if not attachment:
+            if not file_object:
                 # Create a new Attachment record
-                attachment = File(file=file, md5_hash=md5_hash)
-                attachment.save()
-            attachments.append(attachment)
+                file_object = File(file=file, md5_hash=md5_hash)
+                file_object.save()
+            attachments.append(file_object)
 
         attachment_info = json.loads(
             mail.escape_data(d, 'attachment-info', '{}'))
@@ -53,6 +53,7 @@ def receive_mail(request: HttpRequest):
         for info, attachment in zip(attachment_info.values(), attachments):
             mail.attachments.create(
                 file=attachment, filename=info['filename'], name=info['name']).save()  # type: ignore
+            UserFile.objects.create(user=user, file=attachment).save()
 
     return HttpResponse(status=200)
 
