@@ -3,7 +3,11 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login, authenticate
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from ..mail.models import File, UserFile
+from .models import AccountModel
+from .serializers import UserSerializer
 
 @csrf_exempt
 def auth(request):
@@ -49,3 +53,11 @@ def login_api(request):
     else:
         login(request, user)
         return redirect('/')
+    
+class UserView(APIView):
+    def get(self, request):
+        if request.user.pk:
+            serializer = UserSerializer(request.user)
+            return Response(serializer.data)
+        else:
+            return Response(status=403)
