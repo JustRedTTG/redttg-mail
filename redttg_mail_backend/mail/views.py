@@ -57,9 +57,11 @@ def receive_mail(request: HttpRequest):
 
     return HttpResponse(status=200)
 
+
 class MailListView(ListAPIView):
     serializer_class = PreviewMailSerializer
     queryset = Mail.objects.all().order_by('-created')
+
 
 class MailView(APIView):
     def get(self, request, pk):

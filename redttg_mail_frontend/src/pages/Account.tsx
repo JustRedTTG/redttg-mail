@@ -1,14 +1,17 @@
-import { Container, Spinner } from "react-bootstrap";
+import { Container, Nav, Spinner } from "react-bootstrap";
 import { UserProp } from "../interfaces/User";
+import SideBar from "../components/SideBar";
+import AccountForm from "../components/AccountForm";
 
-function Account({user}: UserProp) {
+function Account({ user }: UserProp) {
 
-    if (!user) return (<Container><Spinner animation="grow" variant="info"/></Container>);
+    if (!user) return (<Container><Spinner animation="grow" variant="info" /></Container>);
     return (
-        <Container>
-            <h1 className="border-bottom-1 mb-1">Account Settings for {user.name}@redttg.com</h1>
-
-        </Container>
+        <SideBar sideElement={<AccountForm user={user} />}>
+            <Nav className="flex-column" variant="tabs" defaultActiveKey="/account">
+                <Nav.Link to="/account" className="rounded-0">My account</Nav.Link>
+            </Nav>
+        </SideBar>
     );
 }
 

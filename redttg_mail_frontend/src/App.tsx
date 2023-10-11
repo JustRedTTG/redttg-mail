@@ -19,8 +19,8 @@ function App() {
 	}, [])
 
 	return (
-		<Container className="vh-100 w-100">
-			<Navbar user={user} />
+		<Container fluid>
+			<Navbar user={user} className="mx-3" />
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/mail/:mailId" element={<MailView />} />
