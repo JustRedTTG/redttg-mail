@@ -1,9 +1,11 @@
+export type Headers = { [key: string]: string };
+
 interface User {
     id: number;
     name: string;
     date_joined: Date;
     webhook: string;
-    headers: object;
+    headers: Headers;
 
     is_staff: boolean;
     is_superuser: boolean;
