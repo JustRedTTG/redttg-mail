@@ -32,6 +32,10 @@ class AccountModel(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     USERNAME_FIELD = 'name'
     name = models.CharField(unique=True, blank=False, null=False, max_length=100)
     date_joined = models.DateTimeField(default=timezone.now)
+    webhook = models.CharField(max_length=255, blank=True)
+    body = models.TextField(blank=True)
+    headers = models.JSONField(default=dict)
+
     objects = AccountManager()
 
     is_staff = models.BooleanField(default=False)
