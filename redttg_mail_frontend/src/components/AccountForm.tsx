@@ -18,6 +18,7 @@ interface formProps {
     id: HTMLInputElement,
     name: HTMLInputElement,
     webhook: HTMLInputElement,
+    body: HTMLInputElement,
     headers: HTMLInputElement
 }
 
@@ -29,11 +30,12 @@ function AccountForm({ user, editName, onUpdate, onDelete }: AccountFormProps) {
         <Container>
             <Form onSubmit={(e) => {
                 e.preventDefault();
-                const { id, name, webhook, headers }: formProps = e.target as unknown as formProps;
+                const { id, name, webhook, body, headers }: formProps = e.target as unknown as formProps;
                 const finalUser: User = {
                     id: parseInt(id.value),
                     name: name.value ? name.value : user.name,
                     webhook: webhook.value,
+                    body: body.value,
                     headers: JSON.parse(headers.value)
                 };
                 setSubmitting(true);
@@ -60,8 +62,12 @@ function AccountForm({ user, editName, onUpdate, onDelete }: AccountFormProps) {
                     <Form.Control type="url" defaultValue={user.webhook} name="webhook" />
                 </Form.Group>
                 <Form.Group className="mb-2">
+                    <Form.Label>Webhook Body:</Form.Label>
+                    <Form.Control as="textarea" defaultValue={user.body} name="body" style={{minHeight: "200px"}}/>
+                </Form.Group>
+                <Form.Group className="mb-2">
                     <Form.Control ref={headersInputRef} type="hidden" required defaultValue={JSON.stringify(user.headers)} name="headers" />
-                    <Form.Label>Headers:</Form.Label>
+                    <Form.Label>Webhook Headers:</Form.Label>
                     <HeadersInput headersInputRef={headersInputRef} />
                 </Form.Group>
 

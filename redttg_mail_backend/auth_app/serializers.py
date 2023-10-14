@@ -14,6 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             "id", "name", 
             "date_joined", 
-            "webhook", "headers", 
+            "webhook", "body", "headers", 
             "is_staff", "is_superuser"
         ]

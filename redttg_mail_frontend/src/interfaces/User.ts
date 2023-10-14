@@ -5,6 +5,7 @@ interface User {
     name: string;
     date_joined?: Date;
     webhook: string;
+    body: string;
     headers: Headers;
 
     is_staff?: boolean;
