@@ -21,6 +21,7 @@ class Mail(models.Model):
     star = models.BooleanField(default=False)
     read = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
+    pending_webhook = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs) -> None:
         if 'data' in kwargs.keys():

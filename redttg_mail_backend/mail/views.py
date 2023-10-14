@@ -16,6 +16,7 @@ UserModel = get_user_model()
 @require_POST
 def receive_mail(request: HttpRequest):
     d = dict(request.POST)
+    d['pending_webhook'] = True
 
     envelope = json.loads(Mail.escape_data(d, 'envelope', '{}'))
     to = envelope.get('to', [])
