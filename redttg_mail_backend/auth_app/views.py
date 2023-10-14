@@ -1,7 +1,8 @@
+import json
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.views import APIView
@@ -12,10 +13,12 @@ from .models import AccountModel
 from .serializers import UserSerializer, PreviewUserSerializer
 
 
-@csrf_exempt
 def auth(request):
     if request.user.pk is not None:
         uri = request.headers.get('X-Original-URI')
+
+        if uri is None:
+            return HttpResponse(status=400)
 
         if not 'files' in uri:
             return HttpResponse(status=200, content=request.user.pk)
@@ -35,7 +38,6 @@ def auth(request):
 
 
 @require_POST
-@csrf_exempt
 def login_api(request):
     username = request.POST.get('username')
     password = request.POST.get('password')
@@ -58,7 +60,7 @@ def login_api(request):
 
 class UserView(LoginRequiredMixin, APIView):
     def get(self, request, pk: int):
-        if not request.user.pk != pk and not request.user.is_superuser:
+        if request.user.pk != pk and not request.user.is_superuser:
             return Response(status=401)
         serializer = UserSerializer(AccountModel.objects.get(pk=pk))
         return Response(serializer.data)
@@ -67,6 +69,30 @@ class UserView(LoginRequiredMixin, APIView):
 class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListAPIView):
     serializer_class = PreviewUserSerializer
     queryset = AccountModel.objects.all().order_by('-date_joined')
-    def test_func(self):
-        return self.request.user.is_superuser # type: ignore
 
+    def test_func(self):
+        return self.request.user.is_superuser  # type: ignore
+
+@require_POST
+@login_required
+def edit(request):
+    data = json.loads(request.body)
+    user_id = data.get('id')
+    if user_id:
+        user = AccountModel.objects.get(id=user_id)
+        received_user = UserSerializer(instance=user, data=data)
+    else:
+        received_user = UserSerializer(data=data)
+    print(data)
+    if not received_user.is_valid():
+        return HttpResponse(status=400, content=received_user.errors)
+    if user_id != request.user.pk and not request.user.is_superuser:
+        return HttpResponse(status=401, content=request.user.id)
+    
+    user = received_user.save()
+    if not user_id:
+        user.set_password("")
+        user.save()
+    serializer = UserSerializer(user)
+    login(request, user)
+    return HttpResponse(status=200, content=json.dumps(serializer.data))

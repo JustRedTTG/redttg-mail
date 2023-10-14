@@ -10,6 +10,7 @@ import { updateUser } from "../controllers/User";
 interface AccountFormProps {
     user: User
     editName?: boolean;
+    onUpdate?: (user: User) => void;
 }
 
 interface formProps {
@@ -19,7 +20,7 @@ interface formProps {
     headers: HTMLInputElement
 }
 
-function AccountForm({ user, editName }: AccountFormProps) {
+function AccountForm({ user, editName, onUpdate }: AccountFormProps) {
     const headersInputRef = useRef<HTMLInputElement>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -30,21 +31,28 @@ function AccountForm({ user, editName }: AccountFormProps) {
                 const { id, name, webhook, headers }: formProps = e.target as unknown as formProps;
                 const finalUser: User = {
                     id: parseInt(id.value),
-                    name: name.value,
+                    name: name.value ? name.value : user.name,
                     webhook: webhook.value,
                     headers: JSON.parse(headers.value)
                 };
                 setSubmitting(true);
-                updateUser(finalUser).then(() => document.location.reload());
+                updateUser(finalUser).then((user) => {
+                    setSubmitting(false);
+                    if (onUpdate) {
+                        onUpdate(user);
+                    }
+                });
             }}>
                 <Form.Group className="mb-2">
                     <h1 className="border-bottom-1 mb-1">Account Settings for{" "}
                         {user.name}@redttg.com</h1>
                     {editName && <>
                         <Form.Label>Name:</Form.Label>
-                        <Form.Control type="text" defaultValue={user.name} name="name" />
+                        <Form.Control type="text" defaultValue={user.name} name="name" required />
                     </>}
-                    <Form.Control type="hidden" defaultValue={user.id} name="id" />
+                    {user.id > -1 &&
+                        <Form.Control type="hidden" defaultValue={user.id} name="id" />
+                    }
                 </Form.Group>
                 <Form.Group className="mb-2">
                     <Form.Label>Email Webhook:</Form.Label>
@@ -65,7 +73,7 @@ function AccountForm({ user, editName }: AccountFormProps) {
                     }}
                 >
                     Submit
-                    {submitting && <Spinner className="ms-2" animation="border" role="status" size="sm"/>}
+                    {submitting && <Spinner className="ms-2" animation="border" role="status" size="sm" />}
                 </Button>
             </Form>
         </Container>

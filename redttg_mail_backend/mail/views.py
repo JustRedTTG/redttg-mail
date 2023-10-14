@@ -1,6 +1,5 @@
 import json
 from django.http import HttpRequest, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
 from .file_functions import calculate_md5
@@ -14,7 +13,6 @@ from rest_framework.response import Response
 UserModel = get_user_model()
 
 
-@csrf_exempt
 @require_POST
 def receive_mail(request: HttpRequest):
     d = dict(request.POST)
@@ -60,7 +58,8 @@ def receive_mail(request: HttpRequest):
 
 class MailListView(ListAPIView):
     serializer_class = PreviewMailSerializer
-    queryset = Mail.objects.all().order_by('-created')
+    def get_queryset(self):
+        return Mail.objects.filter(user=self.request.user).order_by('-created')
 
 
 class MailView(APIView):
