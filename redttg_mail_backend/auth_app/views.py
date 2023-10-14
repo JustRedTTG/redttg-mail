@@ -18,10 +18,7 @@ def auth(request):
     if request.user.pk is not None:
         uri = request.headers.get('X-Original-URI')
 
-        if uri is None:
-            return HttpResponse(status=400)
-
-        if not 'files' in uri:
+        if uri is None or not 'files' in uri:
             return HttpResponse(status=200, content=request.user.pk)
 
         attachment = uri.lstrip('/files/')
