@@ -2,7 +2,8 @@ import json
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
+from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from rest_framework.views import APIView
@@ -73,26 +74,37 @@ class UserListView(LoginRequiredMixin, UserPassesTestMixin, ListAPIView):
     def test_func(self):
         return self.request.user.is_superuser  # type: ignore
 
-@require_POST
-@login_required
-def edit(request):
-    data = json.loads(request.body)
-    user_id = data.get('id')
-    if user_id:
-        user = AccountModel.objects.get(id=user_id)
-        received_user = UserSerializer(instance=user, data=data)
-    else:
-        received_user = UserSerializer(data=data)
-    print(data)
-    if not received_user.is_valid():
-        return HttpResponse(status=400, content=received_user.errors)
-    if user_id != request.user.pk and not request.user.is_superuser:
-        return HttpResponse(status=401, content=request.user.id)
-    
-    user = received_user.save()
-    if not user_id:
-        user.set_password("")
-        user.save()
-    serializer = UserSerializer(user)
-    login(request, user)
-    return HttpResponse(status=200, content=json.dumps(serializer.data))
+
+class Modify(LoginRequiredMixin, View):
+    def post(self, request):
+        data = json.loads(request.body)
+        password = data.get('password')
+        if password is not None:
+            del data['password']
+        user_id = data.get('id')
+        if user_id:
+            user = AccountModel.objects.get(id=user_id)
+            received_user = UserSerializer(instance=user, data=data)
+        else:
+            received_user = UserSerializer(data=data)
+        if not received_user.is_valid():
+            return HttpResponse(status=400, content=received_user.errors)
+        if user_id != request.user.pk and not request.user.is_superuser:
+            return HttpResponse(status=401, content=request.user.id)
+        
+        user = received_user.save()
+        if not user_id:
+            user.set_password("")
+            user.save()
+        elif password is not None:
+            user.set_password(password)
+            user.save()
+        serializer = UserSerializer(user)
+        login(request, user)
+        return HttpResponse(status=200, content=json.dumps(serializer.data))
+    def delete(self, request):
+        user_id = int(request.body)
+        if user_id != request.user.pk and not request.user.is_superuser:
+            return HttpResponse(status=401, content=request.user.id)
+        AccountModel.objects.get(id=user_id).delete()
+        return HttpResponse(status=200)

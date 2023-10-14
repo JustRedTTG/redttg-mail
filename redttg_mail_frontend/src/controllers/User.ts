@@ -47,3 +47,16 @@ export const updateUser = async (user: User): Promise<User> => {
         throw new Error('Failed to update user');
     });
 }
+
+export const deleteUser = async (id: number): Promise<void> => {
+    return fetch(`${API}/auth/edit`, {
+        method: 'DELETE',
+        credentials: 'include',
+        body: id.toString(),
+    }).then((response) => {
+        if (!response.ok) throw new Error('Failed to delete user');
+    }).catch((error) => {
+        console.error(error);
+        throw new Error('Failed to delete user');
+    });
+}

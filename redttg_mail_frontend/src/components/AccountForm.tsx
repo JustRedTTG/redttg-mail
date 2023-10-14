@@ -5,12 +5,13 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HeadersInput from "./HeadersInput";
 import { useRef, useState } from "react";
 import { API } from "../config";
-import { updateUser } from "../controllers/User";
+import { deleteUser, updateUser } from "../controllers/User";
 
 interface AccountFormProps {
     user: User
     editName?: boolean;
     onUpdate?: (user: User) => void;
+    onDelete?: (id: number) => void;
 }
 
 interface formProps {
@@ -20,7 +21,7 @@ interface formProps {
     headers: HTMLInputElement
 }
 
-function AccountForm({ user, editName, onUpdate }: AccountFormProps) {
+function AccountForm({ user, editName, onUpdate, onDelete }: AccountFormProps) {
     const headersInputRef = useRef<HTMLInputElement>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -75,6 +76,17 @@ function AccountForm({ user, editName, onUpdate }: AccountFormProps) {
                     Submit
                     {submitting && <Spinner className="ms-2" animation="border" role="status" size="sm" />}
                 </Button>
+                {(!user.is_superuser && user.id > -1) &&
+                    <Button variant="danger" className="ms-2" onClick={() => {
+                        deleteUser(user.id).then(() => {
+                            if (onDelete) {
+                                onDelete(user.id)
+                            }
+                        }).catch((e) => document.location.reload());
+                    }}>
+                        Delete
+                    </Button>
+                }
             </Form>
         </Container>
     );

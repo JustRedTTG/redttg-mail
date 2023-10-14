@@ -35,10 +35,10 @@ function Account({ currentUser, onUpdate }: customUserProp) {
             return;
         }
         getUser(id).then((user) => {
-            setUsers([
-                ...users.filter((u) => u.id !== id),
-                user
-            ]);
+            setUsers(users.map(u => u.id === id ? user : u));
+            setUser(user);
+        }).catch(() => {
+            navigate('/account', { replace: true });
         });
     }
 
@@ -67,12 +67,14 @@ function Account({ currentUser, onUpdate }: customUserProp) {
             setUser(user);
             if (user.id === currentUser?.id) onUpdate(user);
             else {
-                setUsers([
-                    ...users.filter((u) => u.id !== user.id),
-                    user
-                ]);
+                setUsers(users.map(u => u.id === user.id ? user : u));
                 if (mode === "mod") navigate(`/account/${user.id}`)
             }
+        }}
+        onDelete={(id) => {
+            setUsers(users.filter(u => u.id !== id));
+            if (id === currentUser?.id) navigate('/login', { replace: true });
+            else navigate('/account', { replace: true });
         }}
     />)
 
