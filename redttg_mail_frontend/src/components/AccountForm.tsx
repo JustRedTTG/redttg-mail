@@ -1,23 +1,42 @@
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Container, Form, Spinner } from "react-bootstrap";
 import User from "../interfaces/User";
 import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HeadersInput from "./HeadersInput";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { API } from "../config";
+import { updateUser } from "../controllers/User";
 
 interface AccountFormProps {
     user: User
-    method?: string;
     editName?: boolean;
 }
 
-function AccountForm({ user, method, editName }: AccountFormProps) {
+interface formProps {
+    id: HTMLInputElement,
+    name: HTMLInputElement,
+    webhook: HTMLInputElement,
+    headers: HTMLInputElement
+}
+
+function AccountForm({ user, editName }: AccountFormProps) {
     const headersInputRef = useRef<HTMLInputElement>(null);
+    const [submitting, setSubmitting] = useState<boolean>(false);
 
     return (
         <Container>
-            <Form>
+            <Form onSubmit={(e) => {
+                e.preventDefault();
+                const { id, name, webhook, headers }: formProps = e.target as unknown as formProps;
+                const finalUser: User = {
+                    id: parseInt(id.value),
+                    name: name.value,
+                    webhook: webhook.value,
+                    headers: JSON.parse(headers.value)
+                };
+                setSubmitting(true);
+                updateUser(finalUser).then(() => document.location.reload());
+            }}>
                 <Form.Group className="mb-2">
                     <h1 className="border-bottom-1 mb-1">Account Settings for{" "}
                         {user.name}@redttg.com</h1>
@@ -37,11 +56,16 @@ function AccountForm({ user, method, editName }: AccountFormProps) {
                     <HeadersInput headersInputRef={headersInputRef} />
                 </Form.Group>
 
-                <Button variant="primary" type="submit" onClick={ (e) => {
-                    if (headersInputRef.current === null) return;
-                    if (headersInputRef.current.value === "") e.preventDefault();
-                }}>
+                <Button
+                    variant={submitting ? "warning" : "primary"}
+                    type="submit"
+                    disabled={submitting}
+                    onClick={(e) => {
+                        if (headersInputRef.current?.value === "") e.preventDefault();
+                    }}
+                >
                     Submit
+                    {submitting && <Spinner className="ms-2" animation="border" role="status" size="sm"/>}
                 </Button>
             </Form>
         </Container>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Table, Spinner, Modal, Button, Form } from "react-bootstrap";
 import { Headers } from "../interfaces/User";
+import CenteredSpinner from "./CenteredSpinner";
 
 interface HeadersInputProps {
     headersInputRef: React.RefObject<HTMLInputElement>;
@@ -28,7 +29,7 @@ function HeadersInput({ headersInputRef }: HeadersInputProps) {
         headersInputRef.current.value = error === undefined ? JSON.stringify(headers) : "";
     }, [headersInputRef.current, error, headers]);
 
-    if (headers === undefined || indexes === undefined) return (<div className="w-100 m-3 d-flex justify-content-center"><Spinner variant="warning" /></div>);
+    if (headers === undefined || indexes === undefined) return (<CenteredSpinner variant="warning"/>);
 
     function newHeader(e: React.ChangeEvent<HTMLInputElement>) {
         if (headers === undefined || indexes === undefined) return;

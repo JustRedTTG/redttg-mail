@@ -19,3 +19,20 @@ export const getUser = async (id?: number): Promise<User> => {
         throw new Error('Failed to fetch user');
     });
 }
+
+export const updateUser = async (user: User): Promise<User> => {
+    return fetch(`${API}/auth/edit`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(user),
+        credentials: 'include'
+    }).then((response) => {
+        if (!response.ok) throw new Error('Failed to update user');
+        return response.json() as unknown as User;
+    }).catch((error) => {
+        console.error(error);
+        throw new Error('Failed to update user');
+    });
+}

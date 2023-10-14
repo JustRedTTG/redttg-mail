@@ -25,7 +25,8 @@ function App() {
 				<Route path="/" element={<Home />} />
 				<Route path="/mail/:mailId" element={<MailView />} />
 				<Route path="/login" element={<Login />} />
-				<Route path="/account" element={<Account user={user}/>} />
+				<Route path="/account" element={<Account currentUser={user}/>} />
+				<Route path="/account/:mode" element={<Account currentUser={user}/>} />
 				{/* <Route path="/register" element={<Register />} /> */}
 			</Routes>
 		</Container>
