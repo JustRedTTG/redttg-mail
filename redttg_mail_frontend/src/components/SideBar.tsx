@@ -8,8 +8,8 @@ interface SideBarProps {
 function SideBar({ sideElement, children }: SideBarProps) {
     return (
         <Row className="p-0 m-0">
-            <Col xs={2} className="p-0 m-0 m-2 h-100">{children}</Col>
-            <Col xs="auto" className="p-0 m-0">
+            <Col xs={3} className="p-2 m-0 h-100">{children}</Col>
+            <Col xs={9} className="p-0 m-0 pe-5">
                 {sideElement}
             </Col>
         </Row>

@@ -22,11 +22,18 @@ function HeadersInput({ headersInputRef }: HeadersInputProps) {
         }
     }, [headersInputRef.current]);
 
+    useEffect(() => {
+        if (headers === undefined) return;
+        if (headersInputRef.current === null) return;
+        headersInputRef.current.value = error === undefined ? JSON.stringify(headers) : "";
+    }, [headersInputRef.current, error, headers]);
+
     if (headers === undefined || indexes === undefined) return (<div className="w-100 m-3 d-flex justify-content-center"><Spinner variant="warning" /></div>);
 
     function newHeader(e: React.ChangeEvent<HTMLInputElement>) {
         if (headers === undefined || indexes === undefined) return;
-        if (indexes.includes(e.target.value)) {
+        e.target.value = e.target.value.replace(/[^a-zA-Z0-9-]/g, "");
+        if (indexes.includes(e.target.value) || e.target.value === "") {
             setInputError(true);
             return;
         } else setInputError(false);
@@ -108,7 +115,7 @@ function HeadersInput({ headersInputRef }: HeadersInputProps) {
                     /></td>
                     <Modal
                         show={error === key && deselected === key}
-                        onHide={() => removeHeaderKey(key, true)}>
+                        onHide={() => cancelSelectHeaderKey(index)}>
                         <Modal.Header closeButton>
                             <Modal.Title>Delete header?</Modal.Title>
                         </Modal.Header>
@@ -119,7 +126,7 @@ function HeadersInput({ headersInputRef }: HeadersInputProps) {
 
                         <Modal.Footer>
                             <Button variant="secondary" onClick={() => cancelSelectHeaderKey(index)}>Cancel</Button>
-                            <Button variant="warning" onClick={() => removeHeaderKey(key)}>Delete</Button>
+                            <Button variant="warning" onClick={() => removeHeaderKey(key, true)}>Delete</Button>
                         </Modal.Footer>
                     </Modal>
                 </tr>
