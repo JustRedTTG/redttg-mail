@@ -1,9 +1,9 @@
-import { Container, Nav, Spinner } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 import User, { UserProp } from "../interfaces/User";
 import SideBar from "../components/SideBar";
 import AccountForm from "../components/AccountForm";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CenteredSpinner from "../components/CenteredSpinner";
 import { getUser, getUsers } from "../controllers/User";
 
@@ -17,14 +17,7 @@ function Account({ currentUser, onUpdate }: customUserProp) {
     const [user, setUser] = useState<User | undefined>(undefined);
     const [users, setUsers] = useState<User[]>([]);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (currentUser === null) navigate('/login', { replace: true });
-        if (!currentUser?.is_superuser) return;
-        getUsers().then(setUsers);
-    }, [currentUser]);
-
-    function setUserFromId() {
+    const setUserFromId = useCallback(() => {
         if (mode === undefined) return;
         const id = parseInt(mode);
         if (id === undefined) return;
@@ -40,7 +33,13 @@ function Account({ currentUser, onUpdate }: customUserProp) {
         }).catch(() => {
             navigate('/account', { replace: true });
         });
-    }
+    }, [mode, users, navigate]);
+
+    useEffect(() => {
+        if (currentUser === null) navigate('/login', { replace: true });
+        if (!currentUser?.is_superuser) return;
+        getUsers().then(setUsers);
+    }, [currentUser, navigate]);
 
     useEffect(() => {
         if (mode === undefined) setUser(currentUser ? currentUser : undefined);
@@ -51,11 +50,11 @@ function Account({ currentUser, onUpdate }: customUserProp) {
             "headers": {}
         } as unknown as User);
         else setUserFromId()
-    }, [mode, currentUser]);
+    }, [mode, currentUser, setUserFromId]);
 
     useEffect(() => {
         if (user === undefined) setUserFromId();
-    }, [users]);
+    }, [users, user, setUserFromId]);
 
     if (!user) return (<CenteredSpinner animation="border" />);
 

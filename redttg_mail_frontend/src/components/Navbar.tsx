@@ -1,5 +1,5 @@
 import { Navbar, Spinner } from "react-bootstrap";
-import User, { UserProp } from "../interfaces/User";
+import { UserProp } from "../interfaces/User";
 import { Link } from "react-router-dom";
 
 interface NavBarProps extends UserProp {

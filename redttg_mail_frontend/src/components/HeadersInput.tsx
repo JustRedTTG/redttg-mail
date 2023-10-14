@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Spinner, Modal, Button, Form } from "react-bootstrap";
+import { Table, Modal, Button, Form } from "react-bootstrap";
 import { Headers } from "../interfaces/User";
 import CenteredSpinner from "./CenteredSpinner";
 
@@ -21,13 +21,13 @@ function HeadersInput({ headersInputRef }: HeadersInputProps) {
             setHeaders(newHeaders);
             setIndexes(Object.keys(newHeaders));
         }
-    }, [headersInputRef.current]);
+    }, [headersInputRef]);
 
     useEffect(() => {
         if (headers === undefined) return;
         if (headersInputRef.current === null) return;
         headersInputRef.current.value = error === undefined ? JSON.stringify(headers) : "";
-    }, [headersInputRef.current, error, headers]);
+    }, [headersInputRef, error, headers]);
 
     if (headers === undefined || indexes === undefined) return (<CenteredSpinner variant="warning"/>);
 

@@ -1,10 +1,9 @@
 import { Button, Container, Form, Spinner } from "react-bootstrap";
 import User from "../interfaces/User";
-import { Editor } from "react-draft-wysiwyg";
+// import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HeadersInput from "./HeadersInput";
 import { useRef, useState } from "react";
-import { API } from "../config";
 import { deleteUser, updateUser } from "../controllers/User";
 
 interface AccountFormProps {
