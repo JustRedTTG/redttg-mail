@@ -15,9 +15,9 @@ def send_webhook(mail_id: int, host: str):
     user: AccountModel = mail.user # type: ignore
 
     variable_map = {
-        "user_id": user.pk,
+        "user_id": str(user.pk),
         "user_name": user.name,
-        "mail_id": mail.pk,
+        "mail_id": str(mail.pk),
         "mail_url": f'{host}/mail/{mail_id}',
     }
 
