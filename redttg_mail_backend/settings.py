@@ -110,3 +110,6 @@ CSRF_TRUSTED_ORIGINS = [
 
 AUTH_USER_MODEL = 'auth_app.AccountModel'
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT', os.path.join(gettempdir(), 'files/'))
+
+CELERY_BROKER_URL = f"redis://{os.getenv('REDIS_HOST', 'localhost')}:{os.getenv('REDIS_PORT', '6379')}"
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL

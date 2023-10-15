@@ -9,6 +9,7 @@ from .validation import validate_email
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .tasks import send_webhook
 
 UserModel = get_user_model()
 
@@ -54,6 +55,17 @@ def receive_mail(request: HttpRequest):
                 file=attachment, filename=info['filename'], name=info['name']).save()  # type: ignore
             UserFile.objects.create(user=user, file=attachment).save()
 
+    try:
+        send_webhook.apply_async(
+            args=(mail.pk, request.get_host()), # type: ignore
+            retry=True, 
+            retry_policy={
+                'max_retries': None,
+            }, 
+            countdown=2) 
+    except Exception as e:
+        mail.delete() # type: ignore
+        return HttpResponse(status=500)
     return HttpResponse(status=200)
 
 
