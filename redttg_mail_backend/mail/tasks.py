@@ -17,8 +17,11 @@ def send_webhook(mail_id: int, host: str):
     variable_map = {
         "user_id": str(user.pk),
         "user_name": user.name,
+        "user_mail": f"{user.name}@redttg.com"
         "mail_id": str(mail.pk),
         "mail_url": f'https://{host}/mail/{mail_id}',
+        "mail_from": mail.from_sender,
+        "mail_subject": mail.subject
     }
 
     webhook = variables(variable_map, user.webhook)
