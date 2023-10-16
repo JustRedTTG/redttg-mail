@@ -43,11 +43,11 @@ def send_webhook(mail_id: int, host: str):
 @shared_task
 def test_webhook(user_id: int, host: str):
     user = AccountModel.objects.get(id=user_id)
-    mail = MailSerializer(data={
-        "id" : -1, 
-        "text": "Hello, world", 
-        "html": "<p>Hello, world</p>", 
-        "subject": "This is a webhook test email!", 
-        "from_sender": "from@redttg.com"
-    })
+    mail = Mail(
+        id=-1, 
+        text = "Hello, world", 
+        html = "<p>Hello, world</p>", 
+        subject = "This is a webhook test email!", 
+        from_sender = "from@redttg.com"
+    )
     deliver_webhook(user, mail, host)
