@@ -2,6 +2,7 @@ import json
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
 from .file_functions import calculate_md5
 from .models import Mail, File, UserFile
 from .serializers import PreviewMailSerializer, MailSerializer
