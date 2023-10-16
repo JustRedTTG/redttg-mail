@@ -17,7 +17,7 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
          "user_name": user.name,
          "user_mail": f"{user.name}@redttg.com", 
          "mail_id": str(mail.pk),
-         "mail_url": f'https://{host}/mail/{mail_id}',
+         "mail_url": f'https://{host}/mail/{mail.pk}',
          "mail_from": mail.from_sender,
          "mail_subject": mail.subject
      }
