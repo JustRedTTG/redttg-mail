@@ -9,7 +9,7 @@ from .validation import validate_email
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .tasks import send_webhook
+from .tasks import send_webhook, test_webhook
 
 UserModel = get_user_model()
 
@@ -89,3 +89,15 @@ class MailView(APIView):
                 return Response(status=403)
         except Mail.DoesNotExist:
             return Response(status=404)
+
+
+@login_required
+def test(request):
+    test_webhook.apply_async(
+        args=(request.user.pk, request.get_host()),
+        retry=True, 
+        retry_policy={
+            'max_retries': 3,
+        }, 
+        countdown=1)
+    return Response(status=200)
