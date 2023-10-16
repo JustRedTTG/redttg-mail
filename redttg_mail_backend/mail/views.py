@@ -101,4 +101,4 @@ def test(request):
             'max_retries': 3,
         }, 
         countdown=1)
-    return Response(status=200)
+    return HttpResponse(status=200)
