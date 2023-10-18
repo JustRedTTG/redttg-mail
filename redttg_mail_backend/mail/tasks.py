@@ -23,6 +23,7 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
      }
  
      webhook = variables(variable_map, user.webhook)
+     if not webhook: return
      body = variables(variable_map, user.body)
      headers = {
          variables(variable_map, key): variables(variable_map, value)
