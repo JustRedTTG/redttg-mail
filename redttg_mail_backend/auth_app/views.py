@@ -97,7 +97,7 @@ class Modify(LoginRequiredMixin, View):
             user.set_password(password)
             user.save()
         serializer = UserSerializer(user)
-        #login(request, user)
+        login(request, request.user)
         return HttpResponse(status=200, content=json.dumps(serializer.data))
     def delete(self, request):
         user_id = int(request.body)
