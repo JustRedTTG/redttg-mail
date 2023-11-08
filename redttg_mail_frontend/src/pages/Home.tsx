@@ -15,6 +15,9 @@ function Home() {
 
     return (
         <Container>
+            {mails.length < 1 &&
+                <p className="w-100 text-center">No mail yet</p>
+            }
             {mails.map((mail) => (
                 <LinkContainer to={`/mail/${mail.id}`}>
                     <a className="text-decoration-none" href={`/mail/${mail.id}`}>
