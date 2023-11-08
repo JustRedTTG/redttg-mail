@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Mail } from "../interfaces/Mail";
 import { useEffect, useState } from "react";
 import { getMail } from "../controllers/Mail";
-import { Badge, Card, Container, Row } from "react-bootstrap";
+import { Badge, Card, Container, Row, Stack } from "react-bootstrap";
 import DOMPurify from 'dompurify';
 
 function MailView() {
@@ -37,15 +37,20 @@ function MailView() {
                     <Container>
                         <Row>
                             <Badge className="w-auto my-2">
-                                from: <Badge pill bg="success">{mail.envelope.from}</Badge>
+                                <Stack direction="horizontal" gap={1}>
+                                    <p className="my-auto">from:</p>
+                                    <Badge pill bg="secondary">{mail.envelope.from}</Badge>
+                                </Stack>
                             </Badge>
                         </Row>
                         <Row>
                             <Badge className="w-auto my-2">
-                                to:
-                                {mail.envelope.to.map((to) => (
-                                    <Badge pill bg="success">{to}</Badge>
-                                ))}
+                                <Stack direction="horizontal" gap={1}>
+                                    <p className="my-auto">to:</p>
+                                    {mail.envelope.to.map((to) => (
+                                        <Badge pill bg="secondary">{to}</Badge>
+                                    ))}
+                                </Stack>
                             </Badge>
                         </Row>
                     </Container>

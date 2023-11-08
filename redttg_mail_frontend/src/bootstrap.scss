@@ -1,0 +1,15 @@
+$primary: #1D2D50;
+$secondary: #133B5C;
+$thirdly: #1E5F74;
+$incoming: #FFF0F5;
+$info: #8EACCD;
+
+$theme-colors: (
+    "primary": $primary,
+    "secondary": $secondary,
+    "thirdly": $thirdly,
+    "info": $info,
+    "incoming": $incoming
+);
+
+@import '~bootstrap/scss/bootstrap';

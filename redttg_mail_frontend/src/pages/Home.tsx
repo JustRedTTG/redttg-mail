@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Badge, Card, Col, Container, Row } from "react-bootstrap";
+import { Badge, Card, Container, Stack } from "react-bootstrap";
 import { MailPreview } from "../interfaces/Mail";
 import { getMails } from "../controllers/Mail";
 import { useNavigate } from "react-router-dom";
@@ -18,30 +18,30 @@ function Home() {
             {mails.map((mail) => (
                 <LinkContainer to={`/mail/${mail.id}`}>
                     <a className="text-decoration-none" href={`/mail/${mail.id}`}>
-                    <Card role="button" className="my-3 p-1 btn btn-danger">
-                        <Row>
-                            <Col xs="auto">
-                                <div className="m-1">
-                                    <Row>
-                                        <Col xs="auto">
-                                            <Badge bg={mail.read ? 'secondary' : 'primary'}>{mail.envelope.from}</Badge>
-                                        </Col>
-                                        <Col>
-                                            <Card.Title className="mb-0">
-                                                {mail.subject}
-                                            </Card.Title>
-                                        </Col>
-                                        <Col>
-                                        {mail.attachments.map((attachment) => (
-                                            <Badge pill bg="primary">{attachment.filename}</Badge>
-                                        ))}
-                                        </Col>
-                                    </Row>
-                                </div>
-                            </Col>
+                        <Card role="button" className="my-3 p-0 btn btn-incoming">
+                            <Card.Header>
+                                <Stack direction="vertical" gap={1}>
+                                    <Stack direction="horizontal" gap={1}>
+                                        <p className="my-auto">From:</p>
+                                        <Badge className="mt-auto" bg={mail.read ? 'thirdly' : 'primary'}>{mail.envelope.from}</Badge>
+                                    </Stack>
+                                    {mail.attachments.length > 0 &&
+                                        <Stack direction="horizontal" gap={1}>
+                                            <Badge pill bg="info" className="attachment_badge">{mail.attachments[0].filename}</Badge>
+                                            {mail.attachments.length > 1 &&
+                                                <Badge pill bg="info" className="attachment_badge">+{mail.attachments.length - 1}</Badge>
+                                            }
+                                        </Stack>
+                                    }
+                                </Stack>
+                            </Card.Header>
+                            <Card.Body>
+                                <Card.Title className="mb-0">
+                                    {mail.subject}
+                                </Card.Title>
 
-                        </Row>
-                    </Card>
+                            </Card.Body>
+                        </Card>
                     </a>
                 </LinkContainer>
             ))}

@@ -1,4 +1,5 @@
 import json
+from traceback import print_exc
 from django.http import HttpRequest, HttpResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth import get_user_model
@@ -65,6 +66,7 @@ def receive_mail(request: HttpRequest):
             }, 
             countdown=2) 
     except Exception as e:
+        print_exc()
         mail.delete() # type: ignore
         return HttpResponse(status=500)
     return HttpResponse(status=200)
