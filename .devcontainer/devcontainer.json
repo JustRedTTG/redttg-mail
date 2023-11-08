@@ -6,7 +6,7 @@
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"postCreateCommand": "bash .devcontainer/post-create.sh",
-	"postStartCommand": "sudo nginx && nohup python -m celery -A redttg_mail_backend worker &",
+	"postStartCommand": "nohup python -m celery -A redttg_mail_backend worker & sudo nginx",
 	"forwardPorts": [8090],
 	"customizations": {
 		"vscode": {
