@@ -3,6 +3,5 @@ from django.core.management import call_command
 
 User = get_user_model()
 
-if User.objects.filter(name='red').exists():
-    User.objects.get(name='red').delete()
-User.objects.create_superuser('red', 'red')
+if not User.objects.filter(name='red').exists():
+    User.objects.create_superuser('red', 'red')

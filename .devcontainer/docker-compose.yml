@@ -19,11 +19,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
       POSTGRES_PASSWORD: postgres
-    networks:
-      - devcontainer
-
-    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
   
   task_cache:
     image: redis:latest
@@ -31,13 +26,8 @@ services:
     command: redis-server
     volumes:
       - redis-data:/var/lib/redis
-    networks:
-      - devcontainer
+    network_mode: service:db
 
 volumes:
   postgres-data:
   redis-data:
-
-networks:
-  devcontainer:
-    driver: bridge
