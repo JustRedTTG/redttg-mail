@@ -26,7 +26,13 @@ function Home() {
                                 <Stack direction="vertical" gap={1}>
                                     <Stack direction="horizontal" gap={1}>
                                         <p className="my-auto">From:</p>
-                                        <Badge className="mt-auto" bg={mail.read ? 'thirdly' : 'primary'}>{mail.envelope.from}</Badge>
+                                        <Badge className="mt-auto" bg={mail.read ? 'thirdly' : 'primary'}>
+                                            <span className="d-flex mail_subject">
+                                                <p>{mail.envelope.from.split("@")[0]}</p>
+                                                <p>@</p>
+                                                <p>{mail.envelope.from.split("@")[1]}</p>
+                                            </span>
+                                        </Badge>
                                     </Stack>
                                     {mail.attachments.length > 0 &&
                                         <Stack direction="horizontal" gap={1}>
@@ -39,10 +45,9 @@ function Home() {
                                 </Stack>
                             </Card.Header>
                             <Card.Body>
-                                <Card.Title className="mb-0">
+                                <Card.Title className="mb-0 text-start">
                                     {mail.subject}
                                 </Card.Title>
-
                             </Card.Body>
                         </Card>
                     </a>

@@ -1,6 +1,16 @@
 .attachment_badge {
+    max-width: 80%;
+}
+
+.attachment_badge,
+.mail_subject p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
+
+}
+
+.mail_subject p {
+    max-width: 100px;
+    margin-bottom: 0px;
 }

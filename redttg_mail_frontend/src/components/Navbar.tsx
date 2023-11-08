@@ -14,11 +14,11 @@ function NavBar({ user, className }: NavBarProps) {
             <Navbar.Collapse className="justify-content-end">
                 {user &&
                     <Navbar.Text>
-                        Signed in as: <Link to="/account">{user.name}@redttg.com</Link>
+                        Signed in as: <Link to="/account">{user.name}</Link>
                     </Navbar.Text>
                 }
                 {user === undefined && 
-                    <Spinner animation="grow" variant="info"/>
+                    <Spinner animation="grow" variant="info" className="me-3 fade-out"/>
                 }
                 {!user &&
                     <Navbar.Text>
