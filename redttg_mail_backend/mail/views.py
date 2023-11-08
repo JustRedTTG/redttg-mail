@@ -11,7 +11,7 @@ from .validation import validate_email
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .tasks import send_webhook, test_webhook
+from .tasks import send_webhook, test_webhook, DeliveryError
 
 UserModel = get_user_model()
 
@@ -63,6 +63,9 @@ def receive_mail(request: HttpRequest):
             retry=True, 
             retry_policy={
                 'max_retries': None,
+                'interval_start': 0,
+                'interval_step': 2,
+                'when': DeliveryError
             }, 
             countdown=2) 
     except Exception as e:

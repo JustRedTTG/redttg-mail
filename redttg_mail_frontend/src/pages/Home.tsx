@@ -7,11 +7,15 @@ import { LinkContainer } from "react-router-bootstrap";
 
 function Home() {
     const navigate = useNavigate()
-    const [mails, setMails] = useState<MailPreview[]>([]);
+    const [mails, setMails] = useState<MailPreview[] | null>(null);
 
     useEffect(() => {
         getMails().then(setMails).catch((err) => navigate('/login', { replace: true }));
     }, [navigate]);
+
+    if (mails === null) {
+        return (<></>)
+    }
 
     return (
         <Container>

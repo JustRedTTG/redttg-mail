@@ -39,7 +39,7 @@ function MailView() {
                             <Badge className="w-auto my-2">
                                 <Stack direction="horizontal" gap={1}>
                                     <p className="my-auto">from:</p>
-                                    <Badge pill bg="secondary">{mail.envelope.from}</Badge>
+                                    <Badge pill bg="secondary" className="scroll">{mail.envelope.from}</Badge>
                                 </Stack>
                             </Badge>
                         </Row>
@@ -47,9 +47,11 @@ function MailView() {
                             <Badge className="w-auto my-2">
                                 <Stack direction="horizontal" gap={1}>
                                     <p className="my-auto">to:</p>
-                                    {mail.envelope.to.map((to) => (
-                                        <Badge pill bg="secondary">{to}</Badge>
-                                    ))}
+                                    <div className="scroll">
+                                        {mail.envelope.to.map((to) => (
+                                            <Badge pill bg="secondary">{to}</Badge>
+                                        ))}
+                                    </div>
                                 </Stack>
                             </Badge>
                         </Row>

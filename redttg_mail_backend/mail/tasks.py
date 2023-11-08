@@ -3,6 +3,7 @@ from .serializers import MailSerializer
 from ..auth_app.models import AccountModel
 from celery import shared_task
 from django.conf import settings
+from traceback import print_exc
 import requests
 
 def variables(variable_map: dict, text: str) -> str:
@@ -10,6 +11,8 @@ def variables(variable_map: dict, text: str) -> str:
         text = text.replace('{{'+key+'}}', value)
     return text
 
+class DeliveryError(Exception):
+    pass
 
 def deliver_webhook(user: AccountModel, mail: Mail, host: str):
      variable_map = {
@@ -39,7 +42,12 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
 def send_webhook(mail_id: int, host: str):
     mail = Mail.objects.get(id=mail_id)
     user: AccountModel = mail.user # type: ignore
-    deliver_webhook(user, mail, host)
+    print("Attemping a delivery of webhook")
+    try:
+        deliver_webhook(user, mail, host)
+    except:
+        print_exc()
+        raise DeliveryError("Failed to deliver")
  
 @shared_task
 def test_webhook(user_id: int, host: str):
