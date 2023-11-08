@@ -1,6 +1,8 @@
 #!/bin/bash
 
 sudo apt-get update
-sudo apt-get install nginx -y
+sudo apt-get install nginx npm -y
+npm i --prefix ./redttg_mail_frontend
+pip install -r requirements.txt
 
-cp "$(dirname "$0")/nginx.conf" "/etc/nginx/conf.d/default.conf"
+sudo cp "$(dirname "$0")/nginx.conf" "/etc/nginx/conf.d/default.conf"
