@@ -5,7 +5,7 @@
 	"dockerComposeFile": "docker-compose.yml",
 	"service": "app",
 	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
-	"postCreateCommand": "/workspaces/${localWorkspaceFolderBasename}/post-create.sh",
+	"postCreateCommand": "bash .devcontainer/post-create.sh",
 	"postStartCommand": "sudo nginx",
 	"customizations": {
 		"vscode": {
