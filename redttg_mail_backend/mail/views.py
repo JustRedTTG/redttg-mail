@@ -64,8 +64,9 @@ def receive_mail(request: HttpRequest):
             retry_policy={
                 'max_retries': None,
                 'interval_start': 0,
-                'interval_step': 2,
-                'when': DeliveryError
+                'interval_step': 30,
+                'interval_max': 3600,
+                'retry_errors': (DeliveryError,)
             }, 
             countdown=2) 
     except Exception as e:
