@@ -15,27 +15,36 @@ class DeliveryError(Exception):
     pass
 
 def deliver_webhook(user: AccountModel, mail: Mail, host: str):
-     variable_map = {
-         "user_id": str(user.pk),
-         "user_name": user.name,
-         "user_mail": f"{user.name}@redttg.com", 
-         "mail_id": str(mail.pk),
-         "mail_url": f'https://{host}/mail/{mail.pk}',
-         "mail_from": mail.from_sender,
-         "mail_subject": mail.subject
-     }
+    variable_map = {
+        "user_id": str(user.pk),
+        "user_name": user.name,
+        "user_mail": f"{user.name}@redttg.com", 
+        "mail_id": str(mail.pk),
+        "mail_url": f'https://{host}/mail/{mail.pk}',
+        "mail_from": mail.from_sender,
+        "mail_subject": mail.subject
+    }
+
+    attachments = [f"https://{host}/attachments?uri={attachment.uri}" for attachment in mail.attachments] # type: ignore
+
+    variable_map.update({
+        f"attachment_{index}":attachment
+        for index, attachment in enumerate(attachments) # type: ignore
+    })
+    variable_map['attachments'] = ', '.join(attachments)
+    
  
-     webhook = variables(variable_map, user.webhook)
-     if not webhook: return
-     body = variables(variable_map, user.body)
-     headers = {
-         variables(variable_map, key): variables(variable_map, value)
-         for key, value in user.headers.items()
-     }
+    webhook = variables(variable_map, user.webhook)
+    if not webhook: return
+    body = variables(variable_map, user.body)
+    headers = {
+        variables(variable_map, key): variables(variable_map, value)
+        for key, value in user.headers.items()
+    }
  
-     requests.post(webhook, data=body, headers=headers)
-     mail.pending_webhook = False
-     mail.save()
+    requests.post(webhook, data=body, headers=headers)
+    mail.pending_webhook = False
+    mail.save()
  
 
 @shared_task()
