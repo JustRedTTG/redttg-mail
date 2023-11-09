@@ -2,8 +2,12 @@ from django.contrib.auth import get_user_model
 from typing import Any
 from django.db import models
 from .fields import *
+from random import choice
+import string
 
 UserModel = get_user_model()
+CHARACTERS = characters = string.ascii_letters + string.digits + "-_"
+
 
 
 class Mail(models.Model):
@@ -64,6 +68,26 @@ class File(models.Model):
 
     def __str__(self):
         return self.md5_hash
+    
+    _uri = models.CharField(max_length=255, blank=True, null=True, db_column="uri")
+
+    @property
+    def uri(self):
+        return self._uri if self._uri and len(self._uri) == 255 else self.generate_uri()
+
+    @uri.setter
+    def uri(self, value):
+        if len(value) < 255:
+            raise ValueError("uri is too small")
+        elif len(value) > 255:
+            raise ValueError("uri is too big")
+        self._uri = value
+
+    def generate_uri(self):
+        self.uri = ''.join(choice(characters) for _ in range(255))
+        self.save()
+
+        return self._uri
 
       
 class Attachment(models.Model):

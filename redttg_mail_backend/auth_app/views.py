@@ -15,20 +15,28 @@ from .serializers import UserSerializer, PreviewUserSerializer
 
 
 def auth(request):
+    response = HttpResponse(status=401, content='NO')
+    uri = request.headers.get('X-Original-URI')
+
+    if uri is None or not 'files' in uri:
+        if request.user.pk:
+            response = HttpResponse(status=200, content=request.user.pk)
+        return response
+
+    uri_final = uri.lstrip('/files/')
+    attachment, *query = uri_final.split('?')
+    if len(query) != 0:
+        query = {
+            (item_split := item.split('='))[0]:item_split[1]
+            for item in query[0].split('&')
+        }
+    file = File.objects.get(file=attachment)
     if request.user.pk is not None:
-        uri = request.headers.get('X-Original-URI')
-
-        if uri is None or not 'files' in uri:
-            return HttpResponse(status=200, content=request.user.pk)
-
-        attachment = uri.lstrip('/files/')
-        response = HttpResponse(status=401, content='NO')
-        file = File.objects.get(file=attachment)
         if file is not None:
             userfile = UserFile.objects.filter(file=file, user=request.user)
-            print(userfile)
             response = HttpResponse(status=200, content='YES')
-
+    elif file != None and (query_uri := query.get('uri')) != None and file.uri == query_uri: # type: ignore
+        response = HttpResponse(status=200, content="guest")
     else:
         response = HttpResponse(status=401, content='NO')
 
