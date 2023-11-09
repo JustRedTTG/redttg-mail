@@ -12,9 +12,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = int(os.environ.get('DEBUG', 1)) > 0
 
 ALLOWED_HOSTS = [
-    os.environ.get('FRONTEND_URL', '*'),
-    "localhost",
-    "127.0.0.1"
+    "*" # Using because docker
 ]
 
 INSTALLED_APPS = [
