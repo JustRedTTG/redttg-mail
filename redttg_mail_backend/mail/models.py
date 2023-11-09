@@ -68,14 +68,7 @@ class File(models.Model):
 
     def __str__(self):
         return self.md5_hash
-
-      
-class Attachment(models.Model):
-    file = models.ForeignKey(File, on_delete=models.CASCADE)
-    filename = models.CharField(max_length=255)
-    type = models.CharField(max_length=255, blank=True)
-    name = models.CharField(max_length=255, blank=True)
-    mail = models.ForeignKey(Mail, on_delete=models.CASCADE, related_name='attachments')
+    
     _uri = models.CharField(max_length=255, blank=True, null=True, name="uri")
 
     @property
@@ -93,3 +86,11 @@ class Attachment(models.Model):
         self.save()
 
         return self._uri
+
+      
+class Attachment(models.Model):
+    file = models.ForeignKey(File, on_delete=models.CASCADE)
+    filename = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, blank=True)
+    name = models.CharField(max_length=255, blank=True)
+    mail = models.ForeignKey(Mail, on_delete=models.CASCADE, related_name='attachments')
