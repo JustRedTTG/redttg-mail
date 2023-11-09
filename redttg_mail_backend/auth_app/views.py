@@ -20,9 +20,8 @@ def auth(request):
 
     if uri is None or not 'files' in uri:
         if request.user.pk:
-            return HttpResponse(status=200, content=request.user.pk)
-        else:
-            return response
+            response = HttpResponse(status=200, content=request.user.pk)
+        return response
 
     uri_final = uri.lstrip('/files/')
     attachment, *query = uri_final.split('?')
@@ -33,11 +32,10 @@ def auth(request):
         }
     file = File.objects.get(file=attachment)
     if request.user.pk is not None:
-        
         if file is not None:
             userfile = UserFile.objects.filter(file=file, user=request.user)
             response = HttpResponse(status=200, content='YES')
-    elif file != None and (query_uri := query.get('uri')) != None and file.uri == query_uri:
+    elif file != None and (query_uri := query.get('uri')) != None and file.uri == query_uri: # type: ignore
         response = HttpResponse(status=200, content="guest")
     else:
         response = HttpResponse(status=401, content='NO')
