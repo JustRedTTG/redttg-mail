@@ -35,7 +35,7 @@ class AccountModel(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     webhook = models.CharField(max_length=255, blank=True)
     body = models.TextField(blank=True)
     headers = models.JSONField(default=dict)
-    send_attachments = models.BooleanField(default=False)
+    locked = models.BooleanField(default=False)
 
     objects = AccountManager()
 

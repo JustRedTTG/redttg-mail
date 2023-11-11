@@ -57,7 +57,7 @@ def login_api(request):
 
     user = authenticate(username=username, password=password)
 
-    if user is None:
+    if user is None or user.locked:
         return redirect('/login')
     else:
         login(request, user)
@@ -96,6 +96,8 @@ class Modify(LoginRequiredMixin, View):
             return HttpResponse(status=400, content=received_user.errors)
         if user_id != request.user.pk and not request.user.is_superuser:
             return HttpResponse(status=401, content=request.user.id)
+        if user_id == request.user.pk and data.get('locked') is not None:
+            return HttpResponse(status=400, content="You can't lock yourself")
         
         user = received_user.save()
         if not user_id:

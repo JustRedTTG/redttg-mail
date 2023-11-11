@@ -15,5 +15,6 @@ class UserSerializer(serializers.ModelSerializer):
             "id", "name", 
             "date_joined", 
             "webhook", "body", "headers", 
-            "is_staff", "is_superuser"
+            "is_staff", "is_superuser",
+            "locked"
         ]
