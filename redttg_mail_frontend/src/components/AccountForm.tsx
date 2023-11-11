@@ -9,6 +9,7 @@ import { deleteUser, updateUser } from "../controllers/User";
 interface AccountFormProps {
     user: User
     editName?: boolean;
+    allowLocking?: boolean;
     onUpdate?: (user: User) => void;
     onDelete?: (id: number) => void;
 }
@@ -18,15 +19,18 @@ interface formProps {
     name: HTMLInputElement,
     webhook: HTMLInputElement,
     body: HTMLInputElement,
-    headers: HTMLInputElement
+    headers: HTMLInputElement,
+    locked?: HTMLInputElement
 }
 
-function AccountForm({ user, editName, onUpdate, onDelete }: AccountFormProps) {
+function AccountForm({ user, editName, allowLocking, onUpdate, onDelete }: AccountFormProps) {
     const headersInputRef = useRef<HTMLInputElement>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
 
+    console.log(allowLocking, user);
+
     return (
-        <Container>
+        <Container className="mb-5">
             <Form onSubmit={(e) => {
                 e.preventDefault();
                 const { id, name, webhook, body, headers }: formProps = e.target as unknown as formProps;
@@ -37,6 +41,9 @@ function AccountForm({ user, editName, onUpdate, onDelete }: AccountFormProps) {
                     body: body.value,
                     headers: JSON.parse(headers.value)
                 };
+                if (allowLocking) {
+                    finalUser.locked = (e.target as unknown as formProps).locked?.checked;
+                }
                 setSubmitting(true);
                 updateUser(finalUser).then((user) => {
                     setSubmitting(false);
@@ -62,13 +69,18 @@ function AccountForm({ user, editName, onUpdate, onDelete }: AccountFormProps) {
                 </Form.Group>
                 <Form.Group className="mb-2">
                     <Form.Label>Webhook Body:</Form.Label>
-                    <Form.Control as="textarea" defaultValue={user.body} name="body" style={{minHeight: "200px"}}/>
+                    <Form.Control as="textarea" defaultValue={user.body} name="body" style={{ minHeight: "200px" }} />
                 </Form.Group>
                 <Form.Group className="mb-2">
                     <Form.Control ref={headersInputRef} type="hidden" required defaultValue={JSON.stringify(user.headers)} name="headers" />
                     <Form.Label>Webhook Headers:</Form.Label>
                     <HeadersInput headersInputRef={headersInputRef} />
                 </Form.Group>
+                {allowLocking &&
+                    <Form.Group className="mb-2 flex-column">
+                        <Form.Check label="locked account?" type="checkbox" defaultChecked={user.locked} name="locked" />
+                    </Form.Group>
+                }
 
                 <Button
                     variant={submitting ? "warning" : "primary"}

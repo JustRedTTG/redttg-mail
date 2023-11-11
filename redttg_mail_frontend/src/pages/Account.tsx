@@ -61,6 +61,7 @@ function Account({ currentUser, onUpdate }: customUserProp) {
     const form = (<AccountForm
         user={user}
         editName={mode === "mod"}
+        allowLocking={currentUser?.is_superuser && user.id !== currentUser?.id}
         key={user.id}
         onUpdate={(user) => {
             setUser(user);

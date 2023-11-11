@@ -10,6 +10,7 @@ interface User {
 
     is_staff?: boolean;
     is_superuser?: boolean;
+    locked?: boolean;
 }
 
 export interface UserProp {
