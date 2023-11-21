@@ -5,11 +5,13 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HeadersInput from "./HeadersInput";
 import { useRef, useState } from "react";
 import { deleteUser, updateUser } from "../controllers/User";
+import { testWebhook } from "../controllers/Mail";
 
 interface AccountFormProps {
     user: User
     editName?: boolean;
     allowLocking?: boolean;
+    me?: boolean;
     onUpdate?: (user: User) => void;
     onDelete?: (id: number) => void;
 }
@@ -23,7 +25,7 @@ interface formProps {
     locked?: HTMLInputElement
 }
 
-function AccountForm({ user, editName, allowLocking, onUpdate, onDelete }: AccountFormProps) {
+function AccountForm({ user, editName, allowLocking, me, onUpdate, onDelete }: AccountFormProps) {
     const headersInputRef = useRef<HTMLInputElement>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
 
@@ -93,6 +95,18 @@ function AccountForm({ user, editName, allowLocking, onUpdate, onDelete }: Accou
                     Submit
                     {submitting && <Spinner className="ms-2" animation="border" role="status" size="sm" />}
                 </Button>
+                {me &&
+                    <Button
+                        className="ms-2"
+                        variant={submitting ? "warning" : "primary"}
+                        disabled={submitting}
+                        onClick={(e) => {
+                            testWebhook();
+                        }}
+                    >
+                        Test webhook
+                    </Button>
+                }
                 {(!user.is_superuser && user.id > -1) &&
                     <Button variant="danger" className="ms-2" onClick={() => {
                         deleteUser(user.id).then(() => {
