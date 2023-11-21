@@ -43,8 +43,9 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
     }
  
     requests.post(webhook, data=body, headers=headers)
-    mail.pending_webhook = False
-    mail.save()
+    if mail.pk:
+        mail.pending_webhook = False
+        mail.save()
  
 
 @shared_task()
