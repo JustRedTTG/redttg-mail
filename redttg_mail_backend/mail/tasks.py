@@ -42,7 +42,8 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
     }
  
     response = requests.post(webhook, data=body, headers=headers)
-    print(f"Webhook response: {response.status_code} - '{response.text}'")
+    if response.status_code != 200:
+        print(f"Webhook response: {response.status_code} - '{response.text}' headers: {headers} data: {body}")
     if mail.pk > 0:
         mail.pending_webhook = False
         mail.save()
