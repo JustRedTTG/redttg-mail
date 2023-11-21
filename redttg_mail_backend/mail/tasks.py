@@ -24,7 +24,6 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
         "mail_from": mail.from_sender,
         "mail_subject": mail.subject
     }
-    print(mail.attachments, mail.attachments.__dir__())
     attachments = [f"https://{host}/files/{attachment.file.file}?uri={attachment.file.uri}" for attachment in mail.attachments.all()] # type: ignore
 
     variable_map.update({
