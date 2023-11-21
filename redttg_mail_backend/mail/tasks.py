@@ -43,7 +43,7 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
     }
  
     requests.post(webhook, data=body, headers=headers)
-    if mail.pk:
+    if mail.pk > 0:
         mail.pending_webhook = False
         mail.save()
  
