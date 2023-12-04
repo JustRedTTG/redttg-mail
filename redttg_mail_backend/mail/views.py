@@ -31,8 +31,9 @@ def receive_mail(request: HttpRequest):
         if not (recipient_name := validate_email(recipient)):
             return HttpResponse(status=400)
         if recipient_name.startswith('notebookrepr-'):
-            user = UserModel.objects.filter(notebook_repr=recipient_name.split('repr-', 1)).first()
-            d['notebook_mail'] = True
+            notebook_repr, port_index = recipient_name.split('repr-', 1)[-1].rsplit('-', 1)
+            user = UserModel.objects.filter(notebook_repr=notebook_repr).first()
+            d['notebook_mail'] = int(port_index)
         else:
             user = UserModel.objects.filter(name=recipient_name).first()
         if not user:

@@ -5,6 +5,7 @@ from celery import shared_task
 from django.conf import settings
 from traceback import print_exc
 import requests
+import rsa
 
 def variables(variable_map: dict, text: str) -> str:
     for key, value in variable_map.items():
@@ -49,13 +50,30 @@ def deliver_webhook(user: AccountModel, mail: Mail, host: str):
         mail.save()
  
 
+def deliver_notebook(user: AccountModel, mail: Mail, host: str):
+    headers = {
+        'File': [f"https://{host}/files/{attachment.file.file}?uri={attachment.file.uri}" for attachment in mail.attachments.all()][0],
+        'Subject': mail.subject,
+        'Authorization': base64.b64encode(rsa.encrypt(user.notebook_repr.encode(), settgins.notebook_public_key)).decode()
+    }
+    response = requests.post(f"https://notebook.redttg.com/port/{mail.notebook_mail}", headers=headers)
+    if response.status_code != 200:
+        print(f"Notebook response: {response.status_code} - '{response.text}' headers: {headers} data: {body}")
+    if mail.pk > 0:
+        mail.pending_webhook = False
+        mail.save()
+
 @shared_task()
 def send_webhook(mail_id: int, host: str):
     mail = Mail.objects.get(id=mail_id)
     user: AccountModel = mail.user # type: ignore
-    print("Attemping a delivery of webhook")
     try:
-        deliver_webhook(user, mail, host)
+        if mail.notebook_mail >= 0:
+            print("Attemping a delivery of notebook")
+            deliver_notebook(user, mail, host)
+        else:
+            print("Attemping a delivery of webhook")
+            deliver_webhook(user, mail, host)
     except:
         print_exc()
         raise DeliveryError("Failed to deliver")
