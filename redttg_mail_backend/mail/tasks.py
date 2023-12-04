@@ -6,6 +6,7 @@ from django.conf import settings
 from traceback import print_exc
 import requests
 import rsa
+import base64
 
 def variables(variable_map: dict, text: str) -> str:
     for key, value in variable_map.items():
@@ -54,11 +55,11 @@ def deliver_notebook(user: AccountModel, mail: Mail, host: str):
     headers = {
         'File': [f"https://{host}/files/{attachment.file.file}?uri={attachment.file.uri}" for attachment in mail.attachments.all()][0],
         'Subject': mail.subject,
-        'Authorization': base64.b64encode(rsa.encrypt(user.notebook_repr.encode(), settgins.notebook_public_key)).decode()
+        'Authorization': base64.b64encode(rsa.encrypt(user.notebook_repr.encode(), settings.NOTEBOOK_PUBLIC_KEY)).decode()
     }
     response = requests.post(f"https://notebook.redttg.com/port/{mail.notebook_mail}", headers=headers)
     if response.status_code != 200:
-        print(f"Notebook response: {response.status_code} - '{response.text}' headers: {headers} data: {body}")
+        print(f"Notebook response: {response.status_code} - '{response.text}' headers: {headers}")
     if mail.pk > 0:
         mail.pending_webhook = False
         mail.save()
@@ -67,6 +68,7 @@ def deliver_notebook(user: AccountModel, mail: Mail, host: str):
 def send_webhook(mail_id: int, host: str):
     mail = Mail.objects.get(id=mail_id)
     user: AccountModel = mail.user # type: ignore
+    print(mail.notebook_mail)
     try:
         if mail.notebook_mail >= 0:
             print("Attemping a delivery of notebook")

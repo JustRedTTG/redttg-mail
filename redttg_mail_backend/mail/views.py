@@ -39,6 +39,8 @@ def receive_mail(request: HttpRequest):
         if not user:
             return HttpResponse(status=400)
         mail = user.mails.create(data=d)  # type: ignore
+        if recipient_name.startswith('notebookrepr-'):
+            mail.notebook_mail = int(port_index)
 
         attachments = []
         for file in request.FILES.values():

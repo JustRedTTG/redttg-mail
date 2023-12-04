@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 with open(os.path.join(BASE_DIR, 'public_notebook_key.pem'), 'rb') as f:
-    notebook_public_key = rsa.PublicKey.load_pkcs1(f.read())
+    NOTEBOOK_PUBLIC_KEY = rsa.PublicKey.load_pkcs1(f.read())
 
 DEBUG = int(os.environ.get('DEBUG', 1)) > 0
 
