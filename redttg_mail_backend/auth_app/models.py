@@ -10,7 +10,7 @@ from django.apps import apps
 
 def make_repr():
     characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for _ in range(20))
+    return ''.join(random.choice(characters) for _ in range(20)).lower()
 
 
 class AccountManager(auth_models.BaseUserManager):
