@@ -3,7 +3,7 @@ import User from "../interfaces/User";
 // import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import HeadersInput from "./HeadersInput";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { deleteUser, updateUser } from "../controllers/User";
 import { testWebhook } from "../controllers/Mail";
 
@@ -28,6 +28,20 @@ interface formProps {
 function AccountForm({ user, editName, allowLocking, me, onUpdate, onDelete }: AccountFormProps) {
     const headersInputRef = useRef<HTMLInputElement>(null);
     const [submitting, setSubmitting] = useState<boolean>(false);
+    const [notebookTable, setNotebookTable] = useState<JSX.Element[]>([]);
+
+    useEffect(() => {
+        let tempNotebookTable = [];
+        for (let i = 0; i < 7; i++) {
+            tempNotebookTable.push(
+                <tr>
+                            <th>Port</th>
+                            <th>notebookrepr-{user.notebook_repr}-{i}@redttg.com</th>
+                        </tr>);
+        }
+        setNotebookTable(tempNotebookTable);
+    }, [user]);
+
 
     console.log(allowLocking, user);
 
@@ -117,6 +131,15 @@ function AccountForm({ user, editName, allowLocking, me, onUpdate, onDelete }: A
                     }}>
                         Delete
                     </Button>
+                }
+                {user.notebook_repr &&
+                <Form.Group>
+                    <h3>Your notebook mails </h3>
+                    <table className="table table-striped">
+                        {notebookTable}
+                    </table>
+                    <h4>(DO NOT SHARE, GIVES DIRECT NOTEBOOK UPLOAD ACCESS)</h4>
+                </Form.Group>
                 }
             </Form>
         </Container>

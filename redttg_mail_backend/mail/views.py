@@ -30,7 +30,11 @@ def receive_mail(request: HttpRequest):
     for recipient in to:
         if not (recipient_name := validate_email(recipient)):
             return HttpResponse(status=400)
-        user = UserModel.objects.filter(name=recipient_name).first()
+        if recipient_name.startswith('notebookrepr-'):
+            user = UserModel.objects.filter(notebook_repr=recipient_name.split('repr-', 1)).first()
+            d['notebook_mail'] = True
+        else:
+            user = UserModel.objects.filter(name=recipient_name).first()
         if not user:
             return HttpResponse(status=400)
         mail = user.mails.create(data=d)  # type: ignore

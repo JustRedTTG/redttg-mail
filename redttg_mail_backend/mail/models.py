@@ -26,6 +26,7 @@ class Mail(models.Model):
     read = models.BooleanField(default=False)
     deleted = models.BooleanField(default=False)
     pending_webhook = models.BooleanField(default=False)
+    notebook_mail = models.BooleanField(default=False)
 
     def __init__(self, *args, **kwargs) -> None:
         if 'data' in kwargs.keys():

@@ -6,6 +6,7 @@ interface User {
     date_joined?: Date;
     webhook: string;
     body: string;
+    notebook_repr?: string;
     headers: Headers;
 
     is_staff?: boolean;

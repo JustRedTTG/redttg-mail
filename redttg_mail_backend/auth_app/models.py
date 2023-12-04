@@ -1,12 +1,16 @@
 import random
 import re
 import string
-
 import django.contrib.auth.models as auth_models
 from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.utils import timezone
 from django.apps import apps
+
+
+def make_repr():
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for _ in range(20))
 
 
 class AccountManager(auth_models.BaseUserManager):
@@ -27,7 +31,7 @@ class AccountManager(auth_models.BaseUserManager):
 
         return self._create_user(name, password, **extra_fields)
 
-
+    
 class AccountModel(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     USERNAME_FIELD = 'name'
     name = models.CharField(unique=True, blank=False, null=False, max_length=100)
@@ -36,6 +40,7 @@ class AccountModel(auth_models.AbstractBaseUser, auth_models.PermissionsMixin):
     body = models.TextField(blank=True)
     headers = models.JSONField(default=dict)
     locked = models.BooleanField(default=False)
+    notebook_repr = models.TextField(max_length=20, default=make_repr, editable=False)
 
     objects = AccountManager()
 
