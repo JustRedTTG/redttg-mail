@@ -86,7 +86,7 @@ def receive_mail(request: HttpRequest):
 class MailListView(ListAPIView):
     serializer_class = PreviewMailSerializer
     def get_queryset(self):
-        return Mail.objects.filter(user=self.request.user).order_by('-created')
+        return Mail.objects.filter(user=self.request.user, notebook_mail=-1).order_by('-created')
 
 
 class MailView(APIView):
