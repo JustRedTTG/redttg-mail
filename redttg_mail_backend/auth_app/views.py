@@ -34,10 +34,11 @@ def auth(request):
     if request.user.pk is not None:
         if file is not None:
             userfile = UserFile.objects.filter(file=file, user=request.user)
-            if userfile is not None:
-                response = HttpResponse(status=200, content='YES')
-    elif file is not None and (query_uri := query.get('uri')) is not None and file.uri == query_uri: # type: ignore
+            response = HttpResponse(status=200, content='YES')
+    elif file != None and (query_uri := query.get('uri')) != None and file.uri == query_uri: # type: ignore
         response = HttpResponse(status=200, content="guest")
+    else:
+        response = HttpResponse(status=401, content='NO')
 
     return response
 
